@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, models, Model } from 'mongoose';
 import {IUser} from '../../types/user';
-import { IComment, ICommentBase } from './comment';
+import {  Comment,IComment, ICommentBase } from './comment';
 
 export interface IPostBase {
     user: IUser;
@@ -72,5 +72,47 @@ postSchema.methods.removePost = async function () {
 
 
 postSchema.methods.commentOnPost = async function (commentToAdd: ICommentBase){
-
+    try {
+        const comment = await Comment.create(commentToAdd);
+        this.comments.push(comment._id);
+        await this.save();
+    }  catch (error) {
+        console.log('Failed to comment on the post',error);
+    }
 }
+
+postSchema.methods.getAllComments = async function () {
+    try {
+        await this.populate({
+            path: "comments", 
+            options: {sort: {createdAt: -1}} // sort comment by newest first
+        });
+        return this.comments;
+    } catch (error){
+        console.log('Failed to get comments',error);
+    }
+}
+
+postSchema.statics.getAllPosts = async function () {
+    try {
+        const posts = await this.find().sort({ createdAt: -1 }).populate({
+            path: 'comments',
+            options: { sort: { createdAt: -1 } }
+        }).lean(); // lean() to get plain JS object instead of mongoose document
+
+        return posts.map((post: IPostDocument) => ({
+            ...post,
+            _id:(post._id as any).toString(),
+            comments: post.comments?.map((comment: IComment) => ({
+                ...comment,
+                _id: (comment._id as any).toString()
+       
+            }))
+        }));
+    } catch (error) {
+        console.log('Failed to get all posts',error);
+    }
+}
+
+export const Post = models.Post as IPostModel || mongoose.model<IPostDocument, IPostModel>("Post", postSchema);
+ 
