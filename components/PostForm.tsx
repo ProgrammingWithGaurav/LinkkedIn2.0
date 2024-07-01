@@ -37,6 +37,7 @@ export default function PostForm() {
     setPreview(null);
 
     try {
+      console.log(formDataCopy);
       await createPostAction(formDataCopy);
     } catch (error) {
       console.log("Error Creating Post: ", error);
