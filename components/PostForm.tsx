@@ -27,6 +27,8 @@ export default function PostForm() {
   const handlePostAction = async (formData: FormData) => {
     const formDataCopy = formData;
     ref.current?.reset();
+    // clear the image
+    setPreview(null);
 
     const text = formDataCopy.get("postInput") as string;
 

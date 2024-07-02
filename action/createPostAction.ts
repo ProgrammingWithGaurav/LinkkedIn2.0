@@ -5,20 +5,21 @@ import { Post } from "@/mongodb/models/post";
 import { IUser } from "@/types/user";
 import { currentUser } from "@clerk/nextjs/server";
 import { storage } from "@/firebase.js";
-import {ref, uploadBytes } from "firebase/storage";
+import {ref, uploadBytes,getDownloadURL } from "firebase/storage";
+import { revalidatePath } from "next/cache";
 
 // create a upload image function 
 async function uploadImage(image: File) {
     const storageRef = ref(storage, `images/${image.name}${Date.now()}`);
-    await uploadBytes(storageRef, image).then((snapshot) => {
-        console.log("Uploaded a blob or file!", snapshot);
-    }
-    );
+    // upload the image and return the url
+    await uploadBytes(storageRef, image);
+    return getDownloadURL(storageRef)
+    .then((url) => {
+        return url;
+    });
 }
-
 export default async function createPostAction(formData: FormData) {
     const user = await currentUser();
-
 
     if (!user) {
         throw new Error("User not found");
@@ -45,7 +46,7 @@ export default async function createPostAction(formData: FormData) {
 
         if (image.size > 0) {
             // call the upload image function
-            const storageRef = await uploadImage(image);
+            imageUrl = await uploadImage(image);
             // create the post
             const body: AddPostRequestBody = {
                 user: userDB,
@@ -59,11 +60,11 @@ export default async function createPostAction(formData: FormData) {
                 user: userDB,
                 text: text
             }
-            console.log(body)
             await Post.create(body);
         }
     } catch (error) {
         console.log("Failed to create post", error);
         throw new Error("Failed to create post");
     }
+    revalidatePath('/');  // revalidate the home page
 }
