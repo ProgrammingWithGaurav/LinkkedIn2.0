@@ -5,7 +5,7 @@ import { Button } from "./ui/button";
 import { MessageCircle, Repeat2, Send, ThumbsUpIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LikePostRequestBody } from "@/app/api/posts/[post_id]/like/route";
-import { UnLikePostRequestBody } from "@/app/api/posts/[post_id]/route";
+import { UnLikePostRequestBody } from "@/app/api/posts/[post_id]/unlike/route";
 
 export default function PostOptions({ post }: { post: IPostDocument }) {
   const [isCommentsOpen, setIsCommentsOpen] = useState(false);
@@ -23,7 +23,7 @@ export default function PostOptions({ post }: { post: IPostDocument }) {
     if (!user?.id) {
       throw new Error("User not signed in");
     }
-    const originialLiked = liked;
+    const originalLiked = liked;
     const originalLikes = likes;
 
     const newlikes = liked
@@ -33,6 +33,7 @@ export default function PostOptions({ post }: { post: IPostDocument }) {
     const body: LikePostRequestBody | UnLikePostRequestBody = {
       userId: user.id,
     };
+1
     setLiked(!liked);
     setLikes(newlikes);
 
@@ -46,21 +47,22 @@ export default function PostOptions({ post }: { post: IPostDocument }) {
         body: JSON.stringify(body),
       }
     );
+    console.log(response);
 
     if (!response.ok) {
-      setLiked(originialLiked);
+      setLiked(originalLiked);
       setLikes(originalLikes);
       throw new Error("Failed to like/unlike post");
     }
 
-    const fetchLikesResopnse = await fetch(`/api/posts/${post._id}/likes`);
-    if (!fetchLikesResopnse.ok) {
-      setLiked(originialLiked);
+    const fetchLikesResponse = await fetch(`/api/posts/${post._id}/like`);
+    if (!fetchLikesResponse.ok) {
+      setLiked(originalLiked);
       setLikes(originalLikes);
       throw new Error("Failed to fetch likes");
     }
 
-    const likesData = await fetchLikesResopnse.json();
+    const likesData = await fetchLikesResponse.json();
     setLikes(likesData.likes);
   };
 

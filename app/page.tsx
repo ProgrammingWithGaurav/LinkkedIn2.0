@@ -23,7 +23,6 @@ export default async function Home() {
           <PostForm />
         </SignedIn>
         <PostFeed posts={posts} />
-        ``
       </section>
 
       <section className="hidden xl:inline justify-center col-span-2"></section>
