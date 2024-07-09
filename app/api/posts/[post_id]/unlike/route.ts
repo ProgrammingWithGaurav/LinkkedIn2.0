@@ -1,6 +1,12 @@
 import connectDB from "@/db";
+import { Post } from "@/mongodb/models/post";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+
+
+export interface UnLikePostRequestBody {
+    userId: string;
+}
 
 export async function POST(
     request: Request,
