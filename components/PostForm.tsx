@@ -87,7 +87,11 @@ export default function PostForm() {
         )}
 
         <div className="flex mt-2 justify-end space-x-2">
-          <Button type="button" onClick={() => fileInputRef.current?.click()}>
+          <Button
+            type="button"
+            variant={preview ? "secondary" : "outline"}
+            onClick={() => fileInputRef.current?.click()}
+          >
             <ImageIcon className="mr-2" size={16} color="currentColor" />
             {preview ? "Change" : "Add"} Image
           </Button>

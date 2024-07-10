@@ -25,7 +25,7 @@ export default function RootLayout({
             <Header />
           </header>
           <div className="bg-[#E4E2ED] flex-1 w-full">
-            <main>{children}</main>
+            <main className="max-w-6xl mx-auto">{children}</main>
           </div>
         </body>
       </html>
