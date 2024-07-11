@@ -24,9 +24,12 @@ export default async function UserInfo({ posts }: { posts: IPostDocument[] }) {
     <div className="flex flex-col justify-center items-center bg-white mr-6 rounded-lg border py-4">
       <Avatar>
         {user?.id ? (
-          <AvatarImage src={imageUrl} />
+          <AvatarImage src={imageUrl} className="w-40 rounded-full" />
         ) : (
-          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarImage
+            src="https://github.com/shadcn.png"
+            className="rounded-full p-2 w-40"
+          />
         )}
 
         <AvatarFallback>
@@ -59,15 +62,17 @@ export default async function UserInfo({ posts }: { posts: IPostDocument[] }) {
 
       <hr className="w-full border-gray-200 my-t5" />
 
-      <div className="flex justify-between w-full px-4 text-sm">
-        <p className="font-semibold text-gray-400">Posts</p>
-        <p className="text-blue-400">{userPosts.length}</p>
-      </div>
+      <SignedIn>
+        <div className="flex justify-between w-full px-4 text-sm">
+          <p className="font-semibold text-gray-400">Posts</p>
+          <p className="text-blue-400">{userPosts.length}</p>
+        </div>
 
-      <div className="flex justify-between w-full px-4 text-sm">
-        <p className="font-semibold text-gray-400">Comments</p>
-        <p className="text-blue-400">{userComoments.length}</p>
-      </div>
+        <div className="flex justify-between w-full px-4 text-sm">
+          <p className="font-semibold text-gray-400">Comments</p>
+          <p className="text-blue-400">{userComoments.length}</p>
+        </div>
+      </SignedIn>
     </div>
   );
 }

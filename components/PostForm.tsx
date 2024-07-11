@@ -5,6 +5,7 @@ import React, { useRef, useState } from "react";
 import { Button } from "./ui/button";
 import { ImageIcon, XIcon } from "lucide-react";
 import createPostAction from "@/action/createPostAction";
+import { toast } from "sonner";
 
 export default function PostForm() {
   const ref = useRef<HTMLFormElement>(null);
@@ -49,7 +50,12 @@ export default function PostForm() {
     <div className="mb-2">
       <form
         action={(formData) => {
-          handlePostAction(formData);
+          const promise = handlePostAction(formData);
+          toast.promise(promise, {
+            loading: "Creating Post...",
+            success: "Post Created!",
+            error: "Error Creating Post",
+          });
         }}
         ref={ref}
         className="bg-white rounded-lg p-3 border"

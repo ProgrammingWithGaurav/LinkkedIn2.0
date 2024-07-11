@@ -10,6 +10,7 @@ import { Trash2 } from "lucide-react";
 import deletePostAction from "@/action/deletePostAction";
 import Image from "next/image";
 import PostOptions from "./PostOptions";
+import { toast } from "sonner";
 
 export default function Post({ post }: { post: IPostDocument }) {
   const { TimeAgo } = useTimeAgo();
@@ -52,6 +53,11 @@ export default function Post({ post }: { post: IPostDocument }) {
               variant="outline"
               onClick={() => {
                 const promise = deletePostAction(post?._id as string);
+                toast.promise(promise, {
+                  loading: "Deleting Post...",
+                  success: "Post Deleted!",
+                  error: "Error Deleting Post",
+                });
               }}
             >
               <Trash2 />

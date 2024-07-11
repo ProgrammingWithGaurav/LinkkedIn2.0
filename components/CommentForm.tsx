@@ -4,6 +4,7 @@ import React, { useRef } from "react";
 import { useUser } from "@clerk/nextjs";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import createCommentAction from "@/action/createCommentAction";
+import { toast } from "sonner";
 
 export default function CommentForm({ postId }: { postId: string }) {
   const { user } = useUser();
@@ -29,6 +30,11 @@ export default function CommentForm({ postId }: { postId: string }) {
       ref={ref}
       action={(formData) => {
         const promise = handleCommentAction(formData);
+        toast.promise(promise, {
+          loading: "Creating Comment...",
+          success: "Comment Created!",
+          error: "Error Creating Comment",
+        });
       }}
       className="flex items-center space-x-1"
     >

@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "sonner";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -20,6 +21,7 @@ export default function RootLayout({
       <html lang="en">
         <body className={"min-h-screen flex flex-col"}>
           {/* Toaster */}
+          <Toaster position="bottom-left" />
           {/* Header */}
           <header className="border-b- sticky top-0 bg-white z-30">
             <Header />
